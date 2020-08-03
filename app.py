@@ -10,7 +10,7 @@ import streamlit_theme as stt
 import pickle
 import hashlib
 
-# from summarizer import Summarizer
+from summarizer import Summarizer
 
 # DB
 from managed_db import *
@@ -23,14 +23,14 @@ def main():
     state = _get_state()
     stt.set_theme({'primary': '#1b3388'})
     state.newsapi = NewsApiClient(api_key='68353e14ce514929ac111b8b0f24556e')
-    # state.model = Summarizer()
+    state.model = Summarizer()
     pages = {
         "Login": page_login,
         "Home": page_home,
         "Signup": page_signup,
     }
 
-    st.sidebar.title(":newspaper: News Summarizer")
+    st.sidebar.title(":newspaper: SummarizeR")
     page = st.sidebar.radio("Select your page", tuple(pages.keys()))
 
     # Display the selected page with the session state
@@ -117,9 +117,9 @@ def page_home(state):
             if clean_article_flag == "True":
                 st.write(raw_article)
                 if st.button("Summarize"):
-                    # summary = model_summary(state.model, clean_article)
-                    # st.write(summary)
-                    st.write("Please wait for the model results")
+                    summary = model_summary(state.model, clean_article)
+                    st.write(summary)
+                    # st.write("Please wait for the model results")
 
         elif task == "Profile":
             display_preferences(state.username,state.password,state.hashed_pswd)
