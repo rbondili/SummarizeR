@@ -41,6 +41,7 @@ def main():
 
 
 def page_login(state):
+    st.title(":newspaper: SummarizeR")
     st.title(":copyright: Login page")
     state.username = st.text_input("User Name")
     state.password = st.text_input("Password",type='password')
@@ -54,6 +55,7 @@ def page_login(state):
             st.warning(":registered: Incorrect Username/Password. Please check or SignUp")
 
 def page_home(state):
+    st.title(":newspaper: SummarizeR")
     if state.result:
         task = st.selectbox("Browse Menu",["Todays News","Search News", "News Summary", "Profile","User Preferences"])
 
@@ -127,6 +129,7 @@ def page_home(state):
         st.warning(":registered: Incorrect Username/Password. Please check or SignUp")
 
 def page_signup(state):
+    st.title(":newspaper: SummarizeR")
     st.subheader("Create New Account")
     state.new_user = st.text_input("Username")
     state.new_email = st.text_input("Email")
