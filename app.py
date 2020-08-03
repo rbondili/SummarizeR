@@ -119,12 +119,53 @@ def page_home(state):
             if clean_article_flag == "True":
                 st.write(raw_article)
                 if st.button("Summarize"):
-                    summary = model_summary(state.model, clean_article)
+                    result = state.model(clean_article)
+                    summary = ''.join(result)
                     st.write(summary)
                     # st.write("Please wait for the model results")
 
         elif task == "Profile":
             display_preferences(state.username,state.password,state.hashed_pswd)
+
+        elif task == 'User Preferences':
+            st.subheader("User Preferences")
+            df = call_api_source()
+            df1 = df[['id', 'name', 'category']]
+            df1.rename(columns={'id':'Unique_Id', 'name':'Site_Name', 'category':'News_Category'}, inplace=True)
+            st.DataFrame(df1.style)
+            sites = st.multiselect("Choose Prefered Site", df1["Site_Name"].unique())
+            pick_all_sites = st.checkbox(' or all news sites')
+            category = st.multiselect("Choose Prefered Category", df1["News_Category"].unique())
+            pick_all_category = st.checkbox(' or all category')
+            sites_selected = False
+            if not pick_all_sites:
+                if sites:
+                    selected_sites = pd.DataFrame(df1[df1['Site_Name'].isin(sites)])
+                    sites_selected = True
+            else:
+                selected_sites = pd.DataFrame(df1['Site_Name'].unique())
+                sites_selected = True
+            category_selected = False
+            if not pick_all_category:
+                if category:
+                    selected_category = pd.DataFrame(df1[df1['News_Category'].isin(category)])
+                    category_selected = True
+            else:
+                selected_category = pd.DataFrame(df1['News_Category'].unique())
+                category_selected = True
+
+            if 	sites_selected == True & category_selected == True:
+                selection = st.radio("Go to", ['All Combinations', 'Specified Combinations'])
+                if selection == 'All Combinations':
+                    result = df1[(df1.Site_Name.isin(selected_sites.Site_Name)) | (df1.News_Category.isin(selected_category.News_Category))]
+                else:
+                    result = df1[(df1.Site_Name.isin(selected_sites.Site_Name)) & (df1.News_Category.isin(selected_category.News_Category))]
+
+                if st.button("Set Preferences"):
+                    preferences = result.to_json(orient="columns")
+                    update_user_preference(state.username, check_hashes(state.password,state.hashed_pswd), preferences)
+                    display_preferences(state.username,state.password,state.hashed_pswd)
+                    st.write("Prefered News avilable in **Todays News** ")
     else:
         st.warning(":registered: Incorrect Username/Password. Please check or SignUp")
 
