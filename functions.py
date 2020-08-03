@@ -133,7 +133,7 @@ def display_preferences(username, password, hashed_pswd):
         return st.write("Please update the user preferences")
     else:
         df_pref = validate_user_prefrences(user_pref)
-        return st.dataframe(df_pref.style)
+        return st.table(df_pref.style)
 
 def format_display_news(df_news):
 	df_news['preview'] = df_news.apply(lambda x: make_clickable(x['url'], x['title']), axis=1)
@@ -142,9 +142,9 @@ def format_display_news(df_news):
 
 	return df_disp_news
 
-def model_summary(model, body):
-	load_model = pickle.load(open('model.pkl', 'rb'))
-	result = load_model(body, max_length=250)
-	summary = ''.join(result)
-
-	return summary
+# def model_summary(model, body):
+# 	load_model = pickle.load(open('model.pkl', 'rb'))
+# 	result = load_model(body, max_length=250)
+# 	summary = ''.join(result)
+#
+# 	return summary
