@@ -132,7 +132,7 @@ def page_home(state):
             df = call_api_source()
             df1 = df[['id', 'name', 'category']]
             df1.rename(columns={'id':'Unique_Id', 'name':'Site_Name', 'category':'News_Category'}, inplace=True)
-            st.DataFrame(df1.style)
+            st.dataframe(df1.style)
             sites = st.multiselect("Choose Prefered Site", df1["Site_Name"].unique())
             pick_all_sites = st.checkbox(' or all news sites')
             category = st.multiselect("Choose Prefered Category", df1["News_Category"].unique())
