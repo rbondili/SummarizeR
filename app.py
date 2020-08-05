@@ -23,7 +23,7 @@ def main():
     state = _get_state()
     stt.set_theme({'primary': '#1b3388'})
     state.newsapi = NewsApiClient(api_key='68353e14ce514929ac111b8b0f24556e')
-    state.model = Summarizer()
+    #state.model = Summarizer()
     pages = {
         "Login": page_login,
         "Home": page_home,
@@ -88,6 +88,7 @@ def page_home(state):
                         df_disp_search = format_display_news(df_search)
                         st.write(df_disp_search.to_html(escape = False), unsafe_allow_html = True)
         elif task == "News Summary":
+            #model = Summarizer()
             options = ["Select Article", "Inset Article"]
             article = st.radio("Pick One", options)
             clean_article_flag = "Flase"
@@ -95,6 +96,9 @@ def page_home(state):
                 uploaded_file = st.selectbox("Select Article",["Select Article", "Apple","Entertainment","Facebook","Music","Sports","Stocks"])
                 if uploaded_file == "Apple":
                     raw_article, clean_article = read_article('Apple_News.txt')
+                    clean_article_flag = "True"
+                elif uploaded_file == "Entertainment":
+                    raw_article, clean_article = read_article('Entertainment.txt')
                     clean_article_flag = "True"
                 elif uploaded_file == "Facebook":
                     raw_article, clean_article = read_article('Facebook.txt')
@@ -119,7 +123,8 @@ def page_home(state):
             if clean_article_flag == "True":
                 st.write(raw_article)
                 if st.button("Summarize"):
-                    result = state.model(clean_article)
+                    model = Summarizer()
+                    result = model(clean_article)
                     summary = ''.join(result)
                     st.write(summary)
                     # st.write("Please wait for the model results")
@@ -269,7 +274,7 @@ class _SessionState:
                 self._state["is_rerun"] = True
                 self._state["session"].request_rerun()
 
-        self._state["hash"] = self._state["hasher"].to_bytes(self._state["data"], None)
+        # self._state["hash"] = self._state["hasher"].to_bytes(self._state["data"], None)
 
 
 def _get_session():
